@@ -25,7 +25,13 @@ object PluginUtils {
     }
 
     fun binaryExists(binary: String): Boolean {
-        val process = Runtime.getRuntime().exec("which $binary")
+        val process = Runtime.getRuntime().exec("${
+            when (getOs()) {
+                "windows" -> "where"
+                "darwin" -> "witch"
+                else -> "whereis"
+            }
+        } $binary")
         process.waitFor()
         return process.exitValue() == 0
     }
